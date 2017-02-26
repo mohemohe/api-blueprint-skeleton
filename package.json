@@ -1,0 +1,33 @@
+{
+  "name": "api-blueprint-skeleton",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "mohemohe",
+  "license": "WTFPL",
+  "scripts": {
+    "test": "echo 🐈＜にゃーん",
+    "aglio:build": "aglio -i ./tmp/all-header.md -o ./out/api.html",
+    "aglio:watch": "aglio -i ./tmp/all-header.md --server",
+    "build": "npm-run-all prebuild outdir:create aglio:build tmpdir:remove",
+    "chokidar:watch": "chokidar \"./src/*.md\" --command \"yarn run prebuild \"",
+    "header:append": "cat ./tmp/all.md >> ./tmp/all-header.md",
+    "header:echo": "echo 'FORMAT: 1A' > ./tmp/all-header.md",
+    "header:remove": "replace 'FORMAT: 1A' '' ./tmp/all.md",
+    "outdir:create": "mkdir -p ./out &> /dev/null",
+    "prebuild": "npm-run-all tmpdir:create srcdir:catenate header:remove header:echo header:append",
+    "srcdir:catenate": "shopt -s dotglob; cat ./src/*.md > ./tmp/all.md",
+    "tmpdir:create": "mkdir -p ./tmp &> /dev/null",
+    "tmpdir:remove": "rm -rf ./tmp &> /dev/null",
+    "watch": "npm-run-all watch:prewatch watch:watch",
+    "watch:prewatch": "npm-run-all prebuild",
+    "watch:watch": "npm-run-all --parallel chokidar:watch aglio:watch"
+  },
+  "dependencies": {
+    "aglio": "^2.3.0",
+    "replace": "^0.3.0"
+  },
+  "devDependencies": {
+    "chokidar-cli": "^1.2.0",
+    "npm-run-all": "^4.0.2"
+  }
+}
